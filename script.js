@@ -80,4 +80,19 @@ network.addEventListener("change", () => {
 });
 
 connectBtn.addEventListener("click", connectWallet);
+window.addEventListener("load", async () => {
+  if (provider && provider.isPhantom) {
+    try {
+      const resp = await provider.connect({ onlyIfTrusted: true });
+
+      publicKey = resp.publicKey;
+      address.textContent = publicKey.toString();
+      status.textContent = "🟢 Wallet Connected";
+
+      await loadBalance();
+    } catch (e) {
+      // এখনও অনুমতি না দিলে কিছু করবে না
+    }
+  }
+});
 disconnectBtn.addEventListener("click", disconnectWallet);
