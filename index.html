@@ -3,84 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solana Wallet Pro</title>
+  <title>Solana Wallet Pro v2</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 </head>
 
 <body>
 
-<div class="container">
+<div class="background-blur blur1"></div>
+<div class="background-blur blur2"></div>
 
-  <div class="wallet-card">
+<div class="app">
 
-    <div class="top-bar">
-      <h1>🟣 Solana Wallet Pro</h1>
-      <button id="themeBtn">🌙</button>
-    </div>
+<header>
 
-    <p id="status">🔴 Wallet Not Connected</p>
+<div class="logo">
 
-    <div class="action-buttons">
-      <button id="connectBtn">🔗 Connect Wallet</button>
-      <button id="disconnectBtn">❌ Disconnect</button>
-    </div>
+<h1>🟣 Solana Wallet Pro</h1>
 
-    <div class="network-card">
-      <h3>🌐 Network</h3>
+<p>Fast • Secure • Decentralized</p>
 
-      <select id="network">
-        <option value="Mainnet">Mainnet</option>
-        <option value="Devnet">Devnet</option>
-        <option value="Testnet">Testnet</option>
-      </select>
+</div>
 
-      <p id="networkStatus">Current : Mainnet</p>
-    </div>
+<button id="themeBtn">
+🌙
+</button>
 
-    <div class="balance-card">
+</header>
 
-      <h2>💰 Wallet Balance</h2>
+<div class="wallet-card">
 
-      <p id="balance">0 SOL</p>
+<div class="wallet-top">
 
-      <button id="refreshBtn">🔄 Refresh Balance</button>
+<div>
 
-    </div>    <div class="wallet-info">
+<h2 id="status">
+🔴 Wallet Not Connected
+</h2>
 
-      <h2>💼 Wallet Information</h2>
+<p id="networkStatus">
+Current : Mainnet
+</p>
 
-      <p><strong>Wallet Address</strong></p>
-      <p id="address">Not Connected</p>
+</div>
 
-      <button id="copyBtn">📋 Copy Address</button>
+<div class="wallet-actions">
 
-      <button id="receiveBtn">📥 Receive</button>
+<button id="connectBtn">
+Connect
+</button>
 
-      <div id="qrBox">
-        <img
-          id="qrImage"
-          src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=DemoWallet123456789"
-          alt="QR Code">
-      </div>
+<button id="disconnectBtn">
+Disconnect
+</button>
 
-      <button id="sendBtn">📤 Send SOL</button>
+</div>
 
-    </div>
+</div>
 
-    <div class="history-card">
+<hr>
 
-      <h2>📜 Transaction History</h2>
+<div class="balance-card">
 
-      <ul id="history">
-        <li>No transactions yet.</li>
-      </ul>
+<p>Total Balance</p>
 
-    </div>
+<h1 id="balance">
+0 SOL
+</h1>
+
+<button id="refreshBtn">
+Refresh Balance
+</button>
+
+</div><div class="address-card">
+
+  <h3>Wallet Address</h3>
+
+  <p id="address">
+    Not Connected
+  </p>
+
+  <div class="address-buttons">
+
+    <button id="copyBtn">
+      📋 Copy Address
+    </button>
+
+    <button id="receiveBtn">
+      📥 Receive
+    </button>
 
   </div>
 
 </div>
-<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+
+<div class="network-card">
+
+  <h3>Network</h3>
+
+  <select id="network">
+
+    <option selected>Mainnet</option>
+
+    <option>Devnet</option>
+
+    <option>Testnet</option>
+
+  </select>
+
+</div>
+
+<div class="send-card">
+
+  <h3>Send SOL</h3>
+
+  <input
+    type="text"
+    id="receiver"
+    placeholder="Receiver Wallet Address"
+  >
+
+  <input
+    type="number"
+    id="amount"
+    placeholder="Amount (SOL)"
+  >
+
+  <button id="sendBtn">
+    🚀 Send SOL
+  </button>
+
+</div><div class="history-card">
+
+  <h3>📜 Transaction History</h3>
+
+  <ul id="history">
+    <li>No transactions found.</li>
+  </ul>
+
+</div>
+
+<footer>
+
+  <p>
+    Solana Wallet Pro v2 © 2026
+  </p>
+
+</footer>
+
+</div>
+
 <script src="script.js"></script>
 
 </body>
