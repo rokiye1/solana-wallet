@@ -20,16 +20,11 @@
 <header>
 
 <div class="logo">
-
 <h1>🟣 Solana Wallet Pro</h1>
-
 <p>Fast • Secure • Decentralized</p>
-
 </div>
 
-<button id="themeBtn">
-🌙
-</button>
+<button id="themeBtn">🌙</button>
 
 </header>
 
@@ -38,27 +33,13 @@
 <div class="wallet-top">
 
 <div>
-
-<h2 id="status">
-🔴 Wallet Not Connected
-</h2>
-
-<p id="networkStatus">
-Current : Mainnet
-</p>
-
+<h2 id="status">🔴 Wallet Not Connected</h2>
+<p id="networkStatus">Current : Mainnet</p>
 </div>
 
 <div class="wallet-actions">
-
-<button id="connectBtn">
-Connect
-</button>
-
-<button id="disconnectBtn">
-Disconnect
-</button>
-
+<button id="connectBtn">Connect Wallet</button>
+<button id="disconnectBtn">Disconnect</button>
 </div>
 
 </div>
@@ -69,17 +50,13 @@ Disconnect
 
 <p>Total Balance</p>
 
-<h1 id="balance">
-0 SOL
-</h1>
+<h1 id="balance">0 SOL</h1>
 
-<button id="refreshBtn">
-Refresh Balance
-</button>
+<button id="refreshBtn">🔄 Refresh Balance</button>
 
 </div><div class="address-card">
 
-  <h3>Wallet Address</h3>
+  <h3>💳 Wallet Address</h3>
 
   <p id="address">
     Not Connected
@@ -101,23 +78,19 @@ Refresh Balance
 
 <div class="network-card">
 
-  <h3>Network</h3>
+  <h3>🌐 Network</h3>
 
   <select id="network">
-
-    <option selected>Mainnet</option>
-
-    <option>Devnet</option>
-
-    <option>Testnet</option>
-
+    <option value="Mainnet" selected>Mainnet</option>
+    <option value="Devnet">Devnet</option>
+    <option value="Testnet">Testnet</option>
   </select>
 
 </div>
 
 <div class="send-card">
 
-  <h3>Send SOL</h3>
+  <h3>🚀 Send SOL</h3>
 
   <input
     type="text"
@@ -129,10 +102,12 @@ Refresh Balance
     type="number"
     id="amount"
     placeholder="Amount (SOL)"
+    step="0.0001"
+    min="0"
   >
 
   <button id="sendBtn">
-    🚀 Send SOL
+    Send SOL
   </button>
 
 </div><div class="history-card">
@@ -145,15 +120,11 @@ Refresh Balance
 
 </div>
 
-<footer>
-
-  <p>
-    Solana Wallet Pro v2 © 2026
-  </p>
-
-</footer>
-
 </div>
+
+<footer>
+  <p>Solana Wallet Pro v2 © 2026</p>
+</footer>
 
 <script src="script.js"></script>
 
