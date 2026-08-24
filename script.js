@@ -1,7 +1,7 @@
-// ================================
+// ===================================
 // Solana Wallet Pro v2
-// script.js - Part 3A
-// ================================
+// Part 3A
+// ===================================
 
 // Buttons
 const connectBtn = document.getElementById("connectBtn");
@@ -10,6 +10,7 @@ const refreshBtn = document.getElementById("refreshBtn");
 const copyBtn = document.getElementById("copyBtn");
 const receiveBtn = document.getElementById("receiveBtn");
 const sendBtn = document.getElementById("sendBtn");
+const themeBtn = document.getElementById("themeBtn");
 
 // Inputs
 const receiver = document.getElementById("receiver");
@@ -24,48 +25,60 @@ const network = document.getElementById("network");
 const networkStatus = document.getElementById("networkStatus");
 
 // Wallet
-let provider = window.solana;
-let publicKey = null;
+let provider = window.phantom?.solana || window.solana;
+let wallet = null;
 
-// Connection
+// Network Connection
 function getConnection() {
+
   switch (network.value) {
+
     case "Devnet":
       return new solanaWeb3.Connection(
-        solanaWeb3.clusterApiUrl("devnet")
+        solanaWeb3.clusterApiUrl("devnet"),
+        "confirmed"
       );
 
     case "Testnet":
       return new solanaWeb3.Connection(
-        solanaWeb3.clusterApiUrl("testnet")
+        solanaWeb3.clusterApiUrl("testnet"),
+        "confirmed"
       );
 
     default:
       return new solanaWeb3.Connection(
-        solanaWeb3.clusterApiUrl("mainnet-beta")
+        solanaWeb3.clusterApiUrl("mainnet-beta"),
+        "confirmed"
       );
   }
+
 }
 
-// Load Balance
+// Balance
 async function loadBalance() {
-  if (!publicKey) return;
+
+  if (!wallet) return;
 
   try {
+
     const connection = getConnection();
 
-    const lamports = await connection.getBalance(publicKey);
+    const lamports =
+      await connection.getBalance(wallet);
 
     balance.textContent =
-      (
-        lamports /
-        solanaWeb3.LAMPORTS_PER_SOL
-      ).toFixed(4) + " SOL";
+      (lamports /
+      solanaWeb3.LAMPORTS_PER_SOL)
+      .toFixed(4) + " SOL";
 
   } catch (err) {
+
     console.error(err);
+
     balance.textContent = "Error";
+
   }
+
 }
 
 // Connect Wallet
@@ -73,20 +86,23 @@ async function connectWallet() {
 
   if (!provider || !provider.isPhantom) {
 
-    alert("Please install Phantom Wallet");
+    alert("Please install Phantom Wallet.");
 
-    window.open("https://phantom.app/", "_blank");
+    window.open("https://phantom.app/");
 
     return;
+
   }
 
   try {
 
-    const response = await provider.connect();
+    const response =
+      await provider.connect();
 
-    publicKey = response.publicKey;
+    wallet = response.publicKey;
 
-    address.textContent = publicKey.toString();
+    address.textContent =
+      wallet.toString();
 
     status.textContent =
       "🟢 Wallet Connected";
@@ -97,23 +113,25 @@ async function connectWallet() {
 
     console.error(err);
 
-    alert("Wallet connection failed.");
+    alert("Connection Failed");
 
   }
 
-}// ================================
+}// ===================================
 // Solana Wallet Pro v2
-// script.js - Part 3B
-// ================================
+// Part 3B
+// ===================================
 
 // Disconnect Wallet
 async function disconnectWallet() {
+
   if (!provider) return;
 
   try {
+
     await provider.disconnect();
 
-    publicKey = null;
+    wallet = null;
 
     status.textContent = "🔴 Wallet Not Connected";
     address.textContent = "Not Connected";
@@ -122,18 +140,26 @@ async function disconnectWallet() {
     history.innerHTML = "<li>No transactions found.</li>";
 
   } catch (err) {
+
     console.error(err);
+
   }
+
 }
 
 // Refresh Balance
 refreshBtn.addEventListener("click", async () => {
-  if (!publicKey) {
+
+  if (!wallet) {
+
     alert("Connect your wallet first.");
+
     return;
+
   }
 
   await loadBalance();
+
 });
 
 // Network Switch
@@ -142,8 +168,14 @@ network.addEventListener("change", async () => {
   networkStatus.textContent =
     "Current : " + network.value;
 
-  if (publicKey) {
+  if (wallet) {
+
     await loadBalance();
+
+    if (typeof loadTransactions === "function") {
+      await loadTransactions();
+    }
+
   }
 
 });
@@ -155,22 +187,23 @@ window.addEventListener("load", async () => {
 
   try {
 
-    const response =
-      await provider.connect({
-        onlyIfTrusted: true
-      });
+    const response = await provider.connect({
+      onlyIfTrusted: true
+    });
 
-    publicKey = response.publicKey;
+    wallet = response.publicKey;
 
-    address.textContent =
-      publicKey.toString();
+    address.textContent = wallet.toString();
 
-    status.textContent =
-      "🟢 Wallet Connected";
+    status.textContent = "🟢 Wallet Connected";
 
     await loadBalance();
 
-  } catch (e) {
+    if (typeof loadTransactions === "function") {
+      await loadTransactions();
+    }
+
+  } catch (err) {
 
     console.log("Auto Connect skipped");
 
@@ -179,62 +212,65 @@ window.addEventListener("load", async () => {
 });
 
 // Button Events
-connectBtn.addEventListener(
-  "click",
-  connectWallet
-);
-
-disconnectBtn.addEventListener(
-  "click",
-  disconnectWallet
-);// ================================
+connectBtn.addEventListener("click", connectWallet);
+disconnectBtn.addEventListener("click", disconnectWallet);// ===================================
 // Solana Wallet Pro v2
-// script.js - Part 3C
-// ================================
+// Part 3C
+// ===================================
 
-// Load Transaction History
+// Transaction History
 async function loadTransactions() {
-  if (!publicKey) return;
+
+  if (!wallet) return;
 
   history.innerHTML = "<li>Loading...</li>";
 
   try {
+
     const connection = getConnection();
 
-    const signatures = await connection.getSignaturesForAddress(
-      publicKey,
-      { limit: 5 }
-    );
+    const signatures =
+      await connection.getSignaturesForAddress(
+        wallet,
+        { limit: 5 }
+      );
 
     history.innerHTML = "";
 
     if (signatures.length === 0) {
-      history.innerHTML = "<li>No transactions found.</li>";
+      history.innerHTML =
+        "<li>No transactions found.</li>";
       return;
     }
 
     signatures.forEach((tx) => {
+
       const li = document.createElement("li");
 
       li.innerHTML = `
         <strong>${tx.err ? "❌ Failed" : "✅ Success"}</strong><br>
-        ${tx.signature.slice(0,20)}...
+        ${tx.signature.substring(0,25)}...
       `;
 
       history.appendChild(li);
+
     });
 
   } catch (err) {
+
     console.error(err);
+
     history.innerHTML =
-      "<li>Failed to load transactions.</li>";
+      "<li>Failed to load history.</li>";
+
   }
+
 }
 
-// Copy Wallet Address
+// Copy Address
 copyBtn.addEventListener("click", async () => {
 
-  if (!publicKey) {
+  if (!wallet) {
     alert("Connect wallet first.");
     return;
   }
@@ -242,10 +278,10 @@ copyBtn.addEventListener("click", async () => {
   try {
 
     await navigator.clipboard.writeText(
-      publicKey.toString()
+      wallet.toString()
     );
 
-    alert("Address copied!");
+    alert("Wallet address copied.");
 
   } catch (err) {
 
@@ -255,42 +291,49 @@ copyBtn.addEventListener("click", async () => {
 
 });
 
-// Receive Address
+// Receive
 receiveBtn.addEventListener("click", () => {
 
-  if (!publicKey) {
+  if (!wallet) {
     alert("Connect wallet first.");
     return;
   }
 
   alert(
     "Receive SOL to:\n\n" +
-    publicKey.toString()
+    wallet.toString()
   );
 
 });
 
-// Connect হলে Balance + History লোড হবে
-const oldConnectWallet = connectWallet;
+// Connect হলে History Load হবে
+const originalConnectWallet = connectWallet;
 
 connectWallet = async function () {
 
-  await oldConnectWallet();
+  await originalConnectWallet();
 
-  if (publicKey) {
+  if (wallet) {
+
     await loadTransactions();
+
   }
 
-};// ================================
+};// ===================================
 // Solana Wallet Pro v2
-// script.js - Part 3D (Final)
-// ================================
+// Part 3D
+// ===================================
 
 // Dark / Light Mode
-const themeBtn = document.getElementById("themeBtn");
-
 themeBtn.addEventListener("click", () => {
   document.body.classList.toggle("light");
+
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("light")
+      ? "light"
+      : "dark"
+  );
 
   themeBtn.textContent =
     document.body.classList.contains("light")
@@ -298,10 +341,15 @@ themeBtn.addEventListener("click", () => {
       : "🌙";
 });
 
-// Send SOL (Basic)
-sendBtn.addEventListener("click", async () => {
+// Load Saved Theme
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light");
+  themeBtn.textContent = "☀️";
+}
 
-  if (!publicKey) {
+// Send SOL (Basic Validation)
+
+  if (!wallet) {
     alert("Connect your wallet first.");
     return;
   }
@@ -310,29 +358,176 @@ sendBtn.addEventListener("click", async () => {
   const sendAmount = parseFloat(amount.value);
 
   if (!receiverAddress) {
-    alert("Enter receiver wallet address.");
+    alert("Please enter receiver address.");
     return;
   }
 
-  if (!sendAmount || sendAmount <= 0) {
+  try {
+    new solanaWeb3.PublicKey(receiverAddress);
+  } catch {
+    alert("Invalid wallet address.");
+    return;
+  }
+
+  if (isNaN(sendAmount) || sendAmount <= 0) {
     alert("Enter a valid SOL amount.");
     return;
   }
 
-  // Placeholder
-  // এখানে পরবর্তী ধাপে Phantom Sign & Send Transaction যোগ করা হবে
   alert(
-    "Ready to send " +
-    sendAmount +
-    " SOL to:\n\n" +
-    receiverAddress
+    `Ready to send ${sendAmount} SOL\nTo:\n${receiverAddress}\n\n(Real transaction will be added in Part 3E)`
   );
 
 });
 
 // Global Error Handler
-window.addEventListener("error", (e) => {
-  console.error("App Error:", e.message);
+window.addEventListener("error", (event) => {
+  console.error(event.error || event.message);
 });
 
-console.log("✅ Solana Wallet Pro v2 Loaded");
+// App Loaded
+console.log("✅ Solana Wallet Pro v2 Loaded");// ===================================
+// Solana Wallet Pro v2
+// Part 3E - Real Send SOL
+// ===================================
+
+sendBtn.removeEventListener("click", () => {});
+
+sendBtn.onclick = async () => {
+
+  if (!wallet) {
+    alert("Connect your wallet first.");
+    return;
+  }
+
+  try {
+
+    const receiverAddress = receiver.value.trim();
+    const sendAmount = parseFloat(amount.value);
+
+    if (!receiverAddress) {
+      alert("Enter receiver wallet address.");
+      return;
+    }
+
+    if (isNaN(sendAmount) || sendAmount <= 0) {
+      alert("Enter a valid SOL amount.");
+      return;
+    }
+
+    const connection = getConnection();
+
+    const toPublicKey = new solanaWeb3.PublicKey(receiverAddress);
+
+    const transaction = new solanaWeb3.Transaction().add(
+
+      solanaWeb3.SystemProgram.transfer({
+
+        fromPubkey: wallet,
+        toPubkey: toPublicKey,
+
+        lamports:
+          sendAmount *
+          solanaWeb3.LAMPORTS_PER_SOL
+
+      })
+
+    );
+
+    transaction.feePayer = wallet;
+
+    const {
+      blockhash
+    } = await connection.getLatestBlockhash();
+
+    transaction.recentBlockhash = blockhash;
+
+    const result =
+      await provider.signAndSendTransaction(
+        transaction
+      );
+
+    await connection.confirmTransaction(
+      result.signature,
+      "confirmed"
+    );
+
+    alert("✅ Transaction Successful!\n\nSignature:\n" + result.signature);
+
+    receiver.value = "";
+    amount.value = "";
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert("❌ Transaction failed or cancelled.");
+
+  }
+
+};// ===================================
+// Solana Wallet Pro v2
+// Part 3F - Final
+// ===================================
+
+// QR Code (Google Chart API)
+function showQRCode() {
+
+  if (!wallet) return;
+
+  let qr = document.getElementById("walletQR");
+
+  if (!qr) {
+
+    qr = document.createElement("img");
+
+    qr.id = "walletQR";
+    qr.style.width = "180px";
+    qr.style.marginTop = "15px";
+
+    document
+      .querySelector(".address-card")
+      .appendChild(qr);
+
+  }
+
+  qr.src =
+    "https://chart.googleapis.com/chart?cht=qr&chs=180x180&chl=" +
+    encodeURIComponent(wallet.toString());
+
+}
+
+// Connect-এর পরে QR Code দেখাবে
+const oldConnect = connectWallet;
+
+connectWallet = async function () {
+
+  await oldConnect();
+
+  if (wallet) {
+
+    showQRCode();
+
+    await loadTransactions();
+
+  }
+
+};
+
+// Disconnect হলে QR Code মুছে যাবে
+const oldDisconnect = disconnectWallet;
+
+disconnectWallet = async function () {
+
+  await oldDisconnect();
+
+  const qr = document.getElementById("walletQR");
+
+  if (qr) qr.remove();
+
+};
+
+console.log("🚀 Solana Wallet Pro v2 Final Ready");
