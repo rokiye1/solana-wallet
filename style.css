@@ -1,1 +1,220 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
 
+body{
+  background:#0f172a;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+.background{
+  position:fixed;
+  width:300px;
+  height:300px;
+  border-radius:50%;
+  filter:blur(120px);
+  z-index:-1;
+}
+
+.blur1{
+  top:-100px;
+  left:-100px;
+  background:#7c3aed;
+}
+
+.blur2{
+  right:-100px;
+  bottom:-100px;
+  background:#06b6d4;
+}
+
+.app{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.logo h1{
+  font-size:30px;
+}
+
+.logo p{
+  color:#94a3b8;
+  margin-top:5px;
+}
+
+.wallet-card{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
+  border-radius:20px;
+  padding:25px;
+  border:1px solid rgba(255,255,255,.15);
+}
+
+.wallet-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
+
+.wallet-actions{
+  display:flex;
+  gap:10px;
+}
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:bold;
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+}
+
+#themeBtn{
+  background:#1e293b;
+  color:#fff;
+}
+
+#connectBtn{
+  background:#22c55e;
+  color:#fff;
+}
+
+#disconnectBtn{
+  background:#ef4444;
+  color:#fff;
+}
+
+.balance-card,
+.address-card,
+.network-card,
+.send-card,
+.history-card{
+  margin-top:20px;
+  padding:20px;
+  border-radius:15px;
+  background:rgba(255,255,255,.05);
+}
+
+#balance{
+  font-size:42px;
+  margin:10px 0;
+  color:#22c55e;
+}
+
+#address{
+  word-break:break-all;
+  margin:10px 0;
+}
+
+.address-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+#qrcode{
+  margin:15px 0;
+  display:flex;
+  justify-content:center;
+}
+input,
+select{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
+  outline:none;
+}
+
+#sendBtn,
+#refreshBtn,
+#copyBtn,
+#receiveBtn{
+  width:100%;
+  margin-top:12px;
+}
+
+#history{
+  list-style:none;
+  margin-top:15px;
+}
+
+#history li{
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  word-break:break-all;
+}
+
+footer{
+  margin-top:25px;
+  text-align:center;
+  color:#94a3b8;
+}
+
+body.light{
+  background:#f8fafc;
+  color:#111827;
+}
+
+body.light .wallet-card,
+body.light .balance-card,
+body.light .address-card,
+body.light .network-card,
+body.light .send-card,
+body.light .history-card{
+  background:#ffffff;
+  border:1px solid #d1d5db;
+}
+
+body.light #themeBtn{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+@media (max-width:768px){
+
+  .wallet-top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .wallet-actions{
+    width:100%;
+    flex-direction:column;
+  }
+
+  .address-buttons{
+    flex-direction:column;
+  }
+
+  .logo h1{
+    font-size:24px;
+  }
+
+  #balance{
+    font-size:32px;
+  }
+
+}
